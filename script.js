@@ -1,5 +1,9 @@
 const PEOPLE_URL = 'https://www.swapi.tech/api/people';
 
+let latestFilmRequest = 0;
+
+let latestCharacterRequest = 0;
+
 // Fetches data from the API and converts the response into JavaScript data.
 async function fetchJson(url, errorMessage) {
     const response = await fetch(url);
@@ -33,35 +37,43 @@ function renderCharacters(people) {
 }
 
 // Fetches and displays all films for the selected character.
-async function renderFilms(filmUrls) {
+async function renderFilms(filmUrls, requestId) {
     const filmList = document.getElementById('film-list');
     filmList.innerHTML = '';
 
     for (const filmUrl of filmUrls) {
-        try {
 
-            const filmData = await fetchJson(filmUrl, 'Failed to fetch film details');
-            
-            const li = document.createElement('li');
-            li.textContent = filmData.result.properties.title;
-
-            li.addEventListener('click', () => handleFilmClick(filmUrl));
-
-            filmList.appendChild(li);
-        } catch (error) {
-            console.error('Error fetching film details:', error);
+        if (requestId !== latestCharacterRequest) {
+            return;
         }
+
+        const filmData = await fetchJson(filmUrl, 'Failed to fetch film details');
+        
+
+        if (requestId !== latestCharacterRequest) {
+            return;
+        }
+
+        const li = document.createElement('li');
+        li.textContent = filmData.result.properties.title;
+
+        li.addEventListener('click', () => handleFilmClick(filmUrl));
+
+        filmList.appendChild(li);
     }
 }
 
 // Fetches the selected character and passes their films to the renderer.
 async function handleCharacterClick(characterUrl) {
+
+    const requestId = ++latestCharacterRequest;
+
     try {
         const characterData = await fetchJson(characterUrl, 'Failed to fetch character details');
 
         const films = characterData.result.properties.films;
 
-        await renderFilms(films);
+        await renderFilms(films, requestId);
 
     } catch (error) {
         console.error('Error fetching character films:', error);
@@ -74,13 +86,14 @@ async function handleCharacterClick(characterUrl) {
 
 // Fetches the selected film and passes its characters to the renderer.
 async function handleFilmClick(filmUrl) {
+
+    const requestId = ++latestFilmRequest;
+
     try {
         const filmData = await fetchJson(filmUrl, 'Failed to fetch film details');
         const characterUrls = filmData.result.properties.characters;
 
-        console.log(`Characters for ${filmData.result.properties.title}:`, characterUrls);
-
-        await renderFilmCharacters(characterUrls);
+        await renderFilmCharacters(characterUrls, requestId);
 
     } catch (error) {
         console.error('Error fetching film characters:', error);
@@ -92,22 +105,26 @@ async function handleFilmClick(filmUrl) {
 }
 
 // Fetches and displays all characters in the selected film.
-async function renderFilmCharacters(characterUrls) {
+async function renderFilmCharacters(characterUrls, requestId) {
     const filmCharactersList = document.getElementById('film-characters-list');
     filmCharactersList.innerHTML = '';  
 
     for (const characterUrl of characterUrls) {
-        try {
+
+        if (requestId !== latestFilmRequest) {
+            return;
+        }
+
         const characterData = await fetchJson(characterUrl, 'Failed to fetch character details');
+
+        if (requestId !== latestFilmRequest) {
+            return;
+        }
 
         const li = document.createElement('li');
         li.textContent = characterData.result.properties.name;
 
         filmCharactersList.appendChild(li);
-
-        } catch (error) {
-            console.error('Error fetching film characters:', error);
-        }
     }
 }
 

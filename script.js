@@ -11,6 +11,11 @@ async function fetchJson(url, errorMessage) {
     return await response.json();
 }
 
+// Displays an error message in the specified container.
+function showError(container, message) {
+    container.innerHTML = `<p>${message}</p>`;
+}
+
 // Creates the clickable character list on the page.
 function renderCharacters(people) {
     const characterList = document.getElementById('character-list');
@@ -60,6 +65,10 @@ async function handleCharacterClick(characterUrl) {
 
     } catch (error) {
         console.error('Error fetching character films:', error);
+
+        const filmList = document.getElementById('film-list');
+
+        showError(filmList, 'Could not load films for this character. Please try again.');
     }
 }
 
@@ -75,6 +84,10 @@ async function handleFilmClick(filmUrl) {
 
     } catch (error) {
         console.error('Error fetching film characters:', error);
+
+        const filmCharactersList = document.getElementById('film-characters-list');
+
+        showError(filmCharactersList, 'Could not load characters for this film. Please try again.');
     }
 }
 
@@ -105,6 +118,10 @@ async function init() {
         renderCharacters(data.results); 
     } catch (error) {
         console.error('Error initializing app:', error);
+
+        const characterList = document.getElementById('character-list');
+
+        showError(characterList, 'Could not load characters. Please try again.');
     }
 }
 

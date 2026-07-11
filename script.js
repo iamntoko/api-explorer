@@ -4,6 +4,7 @@ let latestFilmRequest = 0;
 
 let latestCharacterRequest = 0;
 
+
 // Fetches data from the API and converts the response into JavaScript data.
 async function fetchJson(url, errorMessage) {
     const response = await fetch(url);
@@ -29,17 +30,26 @@ function renderCharacters(people) {
         const li = document.createElement('li');
         li.textContent = person.name;
 
-        // When a character is clicked, fetch and show that character's films.
         li.addEventListener('click', () => handleCharacterClick(person.url));
 
         characterList.appendChild(li);
     });
 }
 
+// Displays a message in the specified section when there are no items to show.
+function showEmptyMessage(section, message) {
+    section.innerHTML = `<p>${message}</p>`;
+}
+
 // Fetches and displays all films for the selected character.
 async function renderFilms(filmUrls, requestId) {
     const filmList = document.getElementById('film-list');
     filmList.innerHTML = '';
+
+    if (filmUrls.length === 0) {
+        showEmptyMessage(filmList, 'No films found for this character.');
+        return;
+    }
 
     for (const filmUrl of filmUrls) {
 
@@ -107,7 +117,12 @@ async function handleFilmClick(filmUrl) {
 // Fetches and displays all characters in the selected film.
 async function renderFilmCharacters(characterUrls, requestId) {
     const filmCharactersList = document.getElementById('film-characters-list');
-    filmCharactersList.innerHTML = '';  
+    filmCharactersList.innerHTML = '';
+    
+    if (characterUrls.length === 0) {
+        showEmptyMessage(filmCharactersList, 'No characters found for this film.');
+        return;
+    }
 
     for (const characterUrl of characterUrls) {
 

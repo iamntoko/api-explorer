@@ -23,7 +23,7 @@ main {
 }
 .card h3 {
     margin-top: 0;
-    color: #E2CC0B;
+    color: #FFD60A;
 }
 
 #content {
@@ -44,9 +44,32 @@ header {
 }
 
 #sub-heading {
-    color: #E2CC0B;
+    color: #FFD60A;
     font-size: 1.5em;
     text-align: center;
     margin-top: 5px;
     margin-bottom: 70px;
+}
+
+#character-list li, #film-list li:not(.placeholder) {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+#character-list li:hover, #film-list li:hover:not(.placeholder) {
+    color: #FFD60A;
+}
+
+.placeholder {
+    color: #94A3B8;
+    list-style: none;
+}
+
+@media (max-width: 768px) {
+    #content {
+        grid-template-columns: 1fr;
+    }
+
+    #film-characters-section {
+        grid-column: auto;
+    }
 }

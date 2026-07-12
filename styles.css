@@ -70,6 +70,9 @@ header h1 {
 #character-list li:hover, #film-list li:hover:not(.placeholder) {
     color: #FFD60A;
 }
+li::marker {
+    color: #FFD60A;
+}
 
 .placeholder {
     color: #94A3B8;

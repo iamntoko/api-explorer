@@ -42,13 +42,25 @@ header {
     padding: 5px;
     text-align: center;
 }
+header h1 {
+    margin-bottom: 0.2rem;
+}
 
 #sub-heading {
     color: #FFD60A;
     font-size: 1.5em;
     text-align: center;
-    margin-top: 5px;
-    margin-bottom: 70px;
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+}
+#sub-heading::after {
+    content: "";
+    display: block;
+    width: 40%;
+    height: 2px;
+    background-color: #FFD60A;
+    margin: 8px auto 0;
+    border-radius: 2px;
 }
 
 #character-list li, #film-list li:not(.placeholder) {
